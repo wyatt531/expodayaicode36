@@ -1,1 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coral Reef – Turtle Quest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --reef-blue: #0b3c5d;
+      --reef-teal: #1f8a9e;
+      --reef-coral: #ff6f61;
+      --reef-sand: #f4e4c1;
+      --reef-dark: #062235;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f8a9e 0, #062235 55%, #020814 100%);
+      color: #fdfdfd;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to right, rgba(6, 34, 53, 0.9), rgba(11, 60, 93, 0.9));
+      border-bottom: 1px solid rgba(244, 228, 193, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #f4e4c1 0, #ff6f61 40%, #1f8a9e 100%);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-icon::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 2px solid rgba(6, 34, 53, 0.7);
+    }
+
+    .logo-text {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    nav a {
+      color: #fdfdfd;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      position: relative;
+      padding-bottom: 0.2rem;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(to right, #ff6f61, #f4e4c1);
+      transition: width 0.25s ease-out;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      padding: 3rem 8vw 2.5rem;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 2.5rem;
+      }
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .hero-copy h1 span {
+      color: #ff6f61;
+      text-shadow: 0 0 18px rgba(255, 111, 97, 0.6);
+    }
+
+    .hero-tagline {
+      font-size: 1.05rem;
+      max-width: 32rem;
+      color: #d7f3ff;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+    }
+
+    .pill {
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(244, 228, 193, 0.4);
+      background: rgba(6, 34, 53, 0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff6f61;
+      box-shadow: 0 0 8px rgba(255, 111, 97, 0.7);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 0.8rem 1.6rem;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ff6f61, #f4e4c1);
+      color: #062235;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fdfdfd;
+      border: 1px solid rgba(244, 228, 193, 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(6, 34, 53, 0.7);
+    }
+
+    .btn-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(6, 34, 53, 0.7);
+      background: radial-gradient(circle at 30% 30%, #f4e4c1 0, #ff6f61 40%, #1f8a9e 100%);
+    }
+
+    .hero-art {
+      position: relative;
+      min-height: 260px;
+    }
+
+    .reef-card {
+      position: relative;
+      border-radius: 24px;
+      padding: 1.4rem 1.4rem 1.8rem;
+      background: radial-gradient(circle at 0 0, rgba(244, 228, 193, 0.18) 0, rgba(6, 34, 53, 0.95) 40%, #020814 100%);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+    }
+
+    .reef-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #d7f3ff;
+    }
+
+    .reef-header span {
+      opacity: 0.8;
+    }
+
+    .reef-scene {
+      position: relative;
+      height: 190px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 0, #1f8a9e 0, #062235 40%, #020814 100%);
+      border: 1px solid rgba(244, 228, 193, 0.18);
+    }
+
+    .reef-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .reef-water-glow {
+      background: radial-gradient(circle at 50% 0, rgba(215, 243, 255, 0.45) 0, transparent 55%);
+      mix-blend-mode: screen;
+    }
+
+    .reef-bubbles {
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(215, 243, 255, 0.4) 0, transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(215, 243, 255, 0.35) 0, transparent 40%),
+        radial-gradient(circle at 40% 80%, rgba(215, 243, 255, 0.3) 0, transparent 40%);
+      opacity: 0.7;
+    }
+
+    .reef-coral {
+      position: absolute;
+      bottom: -6px;
+      left: -10px;
+      right: -10px;
+      height: 80px;
+      background:
+        radial-gradient(circle at 10% 0, #ff6f61 0, transparent 55%),
+        radial-gradient(circle at 40% 10%, #ffb199 0, transparent 55%),
+        radial-gradient(circle at 70% 0, #ff6f61 0, transparent 55%),
+        radial-gradient(circle at 90% 10%, #ffb199 0, transparent 55%);
+      filter: drop-shadow(0 -4px 10px rgba(0, 0, 0, 0.8));
+    }
+
+    .reef-sand {
+      position: absolute;
+      bottom: 0;
+      left: -10px;
+      right: -10px;
+      height: 40px;
+      background: radial-gradient(circle at 50% -40px, #f4e4c1 0, #c9b48a 40%, #8c7a55 70%);
+      opacity: 0.9;
+    }
+
+    .reef-turtle {
+      position: absolute;
+      width: 90px;
+      height: 60px;
+      left: 18%;
+      top: 40%;
+      transform: translate(-50%, -50%);
+    }
+
+    .reef-turtle-shell {
+      position: absolute;
+      inset: 10px 8px 14px 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #f4e4c1 0, #ffb199 30%, #ff6f61 60%, #c94b3b 100%);
+      box-shadow: 0 0 16px rgba(255, 111, 97, 0.7);
+      border: 2px solid rgba(6, 34, 53, 0.7);
+    }
+
+    .reef-turtle-shell::before,
+    .reef-turtle-shell::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 999px;
+      border: 1px dashed rgba(6, 34, 53, 0.6);
+    }
+
+    .reef-turtle-head {
+      position: absolute;
+      right: -12px;
+      top: 22px;
+      width: 26px;
+      height: 22px;
+      border-radius: 60% 40% 40% 60%;
+      background: radial-gradient(circle at 30% 30%, #d7f3ff 0, #1f8a9e 40%, #0b3c5d 100%);
+      box-shadow: 0 0 10px rgba(215, 243, 255, 0.7);
+    }
+
+    .reef-turtle-eye {
+      position: absolute;
+      right: 6px;
+      top: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #020814;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+    }
+
+    .reef-turtle-flipper {
+      position: absolute;
+      width: 22px;
+      height: 16px;
+      border-radius: 60% 40% 40% 60%;
+      background: radial-gradient(circle at 30% 30%, #d7f3ff 0, #1f8a9e 40%, #0b3c5d 100%);
+      box-shadow: 0 0 10px rgba(215, 243, 255, 0.7);
+    }
+
+    .reef-turtle-flipper.front {
+      left: -10px;
+      top: 26px;
+      transform: rotate(-26deg);
+    }
+
+    .reef-turtle-flipper.back {
+      left: -4px;
+      bottom: 10px;
+      transform: rotate(18deg);
+      opacity: 0.8;
+    }
+
+    .reef-fish {
+      position: absolute;
+      width: 26px;
+      height: 16px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #f4e4c1 0, #ffb199 40%, #ff6f61 100%);
+      box-shadow: 0 0 10px rgba(255, 111, 97, 0.7);
+    }
+
+    .reef-fish::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 4px;
+      width: 10px;
+      height: 8px;
+      border-radius: 0 80% 80% 0;
+      background: linear-gradient(to right, #c94b3b, #ff6f61);
+    }
+
+    .reef-fish.one {
+      top: 30%;
+      right: 16%;
+    }
+
+    .reef-fish.two {
+      top: 60%;
+      right: 30%;
+      transform: scale(0.8);
+      opacity: 0.8;
+    }
+
+    .reef-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.2rem;
+      font-size: 0.8rem;
+      color: #d7f3ff;
+    }
+
+    .reef-stat-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.7;
+      margin-bottom: 0.2rem;
+    }
+
+    .reef-stat-value {
+      font-weight: 600;
+      color: #f4e4c1;
+    }
+
+    .reef-progress {
+      position: relative;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(244, 228, 193, 0.18);
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+
+    .reef-progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 68%;
+      background: linear-gradient(90deg, #ff6f61, #f4e4c1);
+      box-shadow: 0 0 12px rgba(255, 111, 97, 0.7);
+    }
+
+    .section {
+      padding: 2.5rem 8vw 3rem;
+      border-top: 1px solid rgba(244, 228, 193, 0.12);
+      background: radial-gradient(circle at 0 100%, rgba(31, 138, 158, 0.2) 0, transparent 55%);
+    }
+
+    .section h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-list {
+      list-style: none;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+    }
+
+    .feature-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid rgba(244, 228, 193, 0.5);
+      background: radial-gradient(circle at 30% 30%, #f4e4c1 0, #ff6f61 40%, #1f8a9e 100%);
+      box-shadow: 0 0 10px rgba(255, 111, 97, 0.7);
+      flex-shrink: 0;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .feature-text {
+      font-size: 0.9rem;
+      color: #d7f3ff;
+    }
+
+    .callout {
+      border-radius: 18px;
+      padding: 1.4rem 1.6rem;
+      background: radial-gradient(circle at 0 0, rgba(244, 228, 193, 0.18) 0, rgba(6, 34, 53, 0.95) 40%, #020814 100%);
+      border: 1px solid rgba(244, 228, 193, 0.2);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+      font-size: 0.9rem;
+      color: #d7f3ff;
+    }
+
+    .callout-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-bottom: 0.4rem;
+    }
+
+    .callout-title {
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #f4e4c1;
+    }
+
+    footer {
+      padding: 1.4rem 8vw 1.6rem;
+      font-size: 0.8rem;
+      color: #d7f3ff;
+      border-top: 1px solid rgba(244, 228, 193, 0.12);
+      background: radial-gradient(circle at 100% 0, rgba(31, 138, 158, 0.2) 0, transparent 55%);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-links a {
+      color: #d7f3ff;
+      text-decoration: none;
+      opacity: 0.8;
+      font-size: 0.8rem;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-icon"></div>
+      <div class="logo-text">Turtle Reef</div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#play">Play</a></li>
+        <li><a href="#reef">The Reef</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="play">
+      <div class="hero-copy">
+        <h1>
+          Dive into the <span>Coral Reef</span><br />
+          and guide your turtle home.
+        </h1>
+        <p class="hero-tagline">
+          Explore a living underwater world, dodge dangers, and help your turtle restore balance to a fragile coral ecosystem.
+        </p>
+
+        <div class="hero-meta">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span>Story-driven turtle adventure</span>
+          </div>
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span>Coral reef ecosystem gameplay</span>
+          </div>
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span>Relaxed, cozy ocean vibes</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-primary">
+            <span class="btn-icon"></span>
+            <span>Start your dive</span>
+          </button>
+          <button class="btn-secondary">
+            <span>Watch trailer</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-art">
+        <div class="reef-card">
+          <div class="reef-header">
+            <span>Featured biome</span>
+            <span>Coral Reef · Depth 18m</span>
+          </div>
+          <div class="reef-scene">
+            <div class="reef-layer reef-water-glow"></div>
+            <div class="reef-layer reef-bubbles"></div>
+            <div class="reef-layer reef-coral"></div>
+            <div class="reef-layer reef-sand"></div>
+
+            <div class="reef-turtle">
+              <div class="reef-turtle-shell"></div>
+              <div class="reef-turtle-head">
+                <div class="reef-turtle-eye"></div>
+              </div>
+              <div class="reef-turtle-flipper front"></div>
+              <div class="reef-turtle-flipper back"></div>
+            </div>
+
+            <div class="reef-fish one"></div>
+            <div class="reef-fish two"></div>
+          </div>
+
+          <div class="reef-stats">
+            <div>
+              <div class="reef-stat-label">Reef health</div>
+              <div class="reef-stat-value">68% – recovering</div>
+              <div class="reef-progress">
+                <div class="reef-progress-fill"></div>
+              </div>
+            </div>
+            <div>
+              <div class="reef-stat-label">Resident turtles</div>
+              <div class="reef-stat-value">4 / 7 sheltered</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="reef">
+      <div class="section-grid">
+        <div>
+          <h2>Your coral reef hub</h2>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <div class="feature-icon"></div>
+              <div>
+                <div class="feature-title">Track reef health</div>
+                <p class="feature-text">
+                  Watch the reef respond to your choices—healthy coral glows brighter, fish return, and your turtle finds new safe paths.
+                </p>
+              </div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-icon"></div>
+              <div>
+                <div class="feature-title">Discover hidden routes</div>
+                <p class="feature-text">
+                  Unlock secret tunnels, kelp forests, and sunken relics that open up new ways for your turtle to explore.
+                </p>
+              </div>
+            </li>
+            <li class="feature-item">
+              <div class="feature-icon"></div>
+              <div>
+                <div class="feature-title">Meet reef residents</div>
+                <p class="feature-text">
+                  Befriend curious fish, wise old turtles, and shy octopuses—each with their own stories and quests.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <aside class="callout">
+          <div class="callout-label">Biome spotlight</div>
+          <div class="callout-title">The Coral Reef, your starting sanctuary</div>
+          <p>
+            This reef is the heart of your journey. It’s where your turtle returns after each adventure, where new missions begin,
+            and where the ocean quietly reflects the impact of every choice you make.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="section-grid">
+        <div>
+          <h2>About the game</h2>
+          <p style="margin-bottom: 1rem; font-size: 0.95rem; color: #d7f3ff;">
+            Turtle Reef is a cozy exploration game set in a hand-crafted underwater world. You’ll guide a young turtle through
+            coral reefs, seagrass meadows, and mysterious deep-sea trenches, learning how delicate ocean ecosystems really are.
+          </p>
+          <p style="font-size: 0.9rem; color: #d7f3ff;">
+            This homepage is your coral reef hub—perfect as the main menu or landing screen before players dive into the full
+            adventure.
+          </p>
+        </div>
+        <aside class="callout">
+          <div class="callout-label">Tip</div>
+          <div class="callout-title">Hook this page into your game</div>
+          <p>
+            Wire the “Start your dive” button to your game’s main scene loader, and use the reef stats to reflect real in-game
+            progress for a living, reactive home screen.
+          </p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© <span id="year"></span> Turtle Reef. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#about">About</a>
+      <a href="#reef">Biome guide</a>
+      <a href="#play">Return to reef</a>
+    </div>
+  </footer>
+
+  <script>
+    // Simple dynamic year for the footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
 
